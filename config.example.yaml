@@ -1,0 +1,39 @@
+# Market Research Configuration
+version: "1.0"
+
+crawler:
+  user_agent: "MarketResearchBot/1.0 (+https://github.com/LukeH/market-research)"
+  request_delay_seconds: 1.0
+  timeout_seconds: 15
+  max_concurrency: 4
+  sources:
+    - reddit
+    - hackernews
+    - rss_feed
+    - forum
+    - search_trends
+
+scoring:
+  weights:
+    velocity: 0.35
+    engagement: 0.25
+    saturation_penalty: 0.20
+    monetization: 0.20
+  thresholds:
+    min_opportunity_score: 60.0
+    high_velocity_threshold: 70.0
+    low_competition_ceiling: 40.0
+
+discovery:
+  min_signals_per_topic: 2
+  max_niches_per_report: 10
+  content_brief_formats:
+    - "Deep Dive Guide"
+    - "Comparison Post"
+    - "Tutorial / How-To"
+    - "Video Breakdown"
+
+storage:
+  data_dir: "./data"
+  reports_dir: "./reports"
+  cache_dir: "./cache"

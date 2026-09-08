@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "market-research"
+version = "0.1.0"
+description = "Web crawler and topic scoring engine for market research, topical inquiry, and content generation."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Luke Holman", email = "holman57@gmail.com"}
+]
+keywords = [
+    "market-research",
+    "web-crawler",
+    "topic-scoring",
+    "content-generation",
+    "niche-discovery",
+    "nlp",
+    "topical-inquiry",
+    "trend-analysis"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+    "Topic :: Text Processing :: General",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[project.scripts]
+market-research = "market_research.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["market_research*"]
