@@ -13,6 +13,7 @@ from market_research.analysis.nlp import TopicExtractor
 from market_research.config import Config
 from market_research.discovery.niche_finder import NicheFinder
 from market_research.inquiry.topical_inquiry import TopicalInquiryEngine
+from market_research.inquiry.zeitgeist_radar import ZeitgeistRadar
 from market_research.scoring.scorer import TopicScorer
 
 
@@ -116,6 +117,26 @@ def cmd_discover(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_zeitgeist(args: argparse.Namespace) -> int:
+    """Generate or sync the daily Cultural Zeitgeist Radar."""
+    radar = ZeitgeistRadar()
+    if args.sync:
+        print(f"[*] Synchronizing Cultural Zeitgeist Radar to GitHub ({args.repo})...")
+        res = radar.sync_to_github(repo=args.repo, assignee=args.assignee)
+        print(f"[+] Result: {res}")
+        return 0
+
+    report = radar.generate_report()
+    md = radar.format_markdown_report(report)
+    if args.output:
+        with open(args.output, "w", encoding="utf-8") as f:
+            f.write(md)
+        print(f"[+] Saved report to: {args.output}")
+    else:
+        print(md)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Construct CLI argument parser."""
     parser = argparse.ArgumentParser(
@@ -147,6 +168,13 @@ def build_parser() -> argparse.ArgumentParser:
     discover_parser.add_argument("--limit", type=int, default=30, help="Signal limit")
     discover_parser.add_argument("--min-score", type=float, default=50.0, help="Minimum opportunity score threshold")
 
+    # Zeitgeist subcommand
+    zg_parser = subparsers.add_parser("zeitgeist", help="Generate or sync daily cultural zeitgeist radar")
+    zg_parser.add_argument("--sync", action="store_true", help="Sync directly to GitHub issue")
+    zg_parser.add_argument("--repo", type=str, default="holman57/market-research", help="GitHub repo")
+    zg_parser.add_argument("--assignee", type=str, default="holman57", help="Issue assignee")
+    zg_parser.add_argument("-o", "--output", type=str, default=None, help="Output markdown file")
+
     return parser
 
 
@@ -166,6 +194,8 @@ def main(args: Optional[List[str]] = None) -> int:
         return cmd_score(parsed_args)
     elif parsed_args.command == "discover":
         return cmd_discover(parsed_args)
+    elif parsed_args.command == "zeitgeist":
+        return cmd_zeitgeist(parsed_args)
 
     return 0
 
