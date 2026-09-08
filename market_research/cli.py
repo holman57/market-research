@@ -137,6 +137,32 @@ def cmd_zeitgeist(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_zeitgeist_100(args: argparse.Namespace) -> int:
+    """Generate or post the Top 100 Cultural Zeitgeist Topics."""
+    from market_research.inquiry.zeitgeist_top_100 import (
+        generate_top_100_split_reports,
+        post_top_100_zeitgeist_issue,
+    )
+
+    if args.post:
+        print(f"[*] Publishing Top 100 Zeitgeist Topics to GitHub ({args.repo})...")
+        res = post_top_100_zeitgeist_issue(repo=args.repo, assignee=args.assignee)
+        print(f"[+] Result: {res}")
+        return 0
+
+    part1, part2 = generate_top_100_split_reports()
+    full_text = f"{part1}\n\n---\n\n{part2}"
+
+    if args.output:
+        with open(args.output, "w", encoding="utf-8") as f:
+            f.write(full_text)
+        print(f"[+] Saved Top 100 dossier to: {args.output}")
+    else:
+        print(full_text)
+
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Construct CLI argument parser."""
     parser = argparse.ArgumentParser(
@@ -175,6 +201,13 @@ def build_parser() -> argparse.ArgumentParser:
     zg_parser.add_argument("--assignee", type=str, default="holman57", help="Issue assignee")
     zg_parser.add_argument("-o", "--output", type=str, default=None, help="Output markdown file")
 
+    # Zeitgeist Top 100 subcommand
+    zg100_parser = subparsers.add_parser("zeitgeist-100", help="Generate or publish the Top 100 Cultural Zeitgeist topics")
+    zg100_parser.add_argument("--post", action="store_true", help="Post or update the Top 100 issue on GitHub")
+    zg100_parser.add_argument("--repo", type=str, default="holman57/market-research", help="GitHub repo")
+    zg100_parser.add_argument("--assignee", type=str, default="holman57", help="Issue assignee")
+    zg100_parser.add_argument("-o", "--output", type=str, default=None, help="Output markdown file")
+
     return parser
 
 
@@ -196,6 +229,8 @@ def main(args: Optional[List[str]] = None) -> int:
         return cmd_discover(parsed_args)
     elif parsed_args.command == "zeitgeist":
         return cmd_zeitgeist(parsed_args)
+    elif parsed_args.command == "zeitgeist-100":
+        return cmd_zeitgeist_100(parsed_args)
 
     return 0
 
