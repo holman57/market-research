@@ -1,0 +1,19 @@
+{
+  "name": "market-research",
+  "version": "0.2.0",
+  "owner": "holman57",
+  "description": "Web crawler, topic scoring, and market intelligence research engine for emerging subcultures and niches.",
+  "tech_stack": {
+    "engine": "Python (asyncio, BeautifulSoup4, rich, click)",
+    "connectors": "SerpAPI, Tavily, DuckDuckGo",
+    "storage": "JSON / Markdown executive research briefs"
+  },
+  "test_command": "python -m unittest discover tests",
+  "features": [
+    "External search API connectors (SerpAPI, Tavily) with zero-cost fallback",
+    "Cultural zeitgeist top 100 niche ranking and radar",
+    "Multi-factor market opportunity scoring (volume, growth, competition, monetization)",
+    "Executive research brief generation in structured markdown"
+  ],
+  "active_issues": [1, 2, 4, 5]
+}
